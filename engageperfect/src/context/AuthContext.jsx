@@ -1,6 +1,6 @@
 /**
  * File: AuthContext.jsx
- * Version: 1.0.1
+ * Version: 1.0.3
  * Purpose: Authentication context for the entire application.
  * Manages user authentication state and provides auth-related functions.
  */
@@ -12,9 +12,10 @@ import {
   signOut,
   onAuthStateChanged,
   sendPasswordResetEmail,
-  updateProfile
+  updateProfile,
+  updateEmail
 } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../services/firebase';
 import { Navigate, useLocation } from 'react-router-dom';
 
@@ -90,13 +91,52 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // In AuthContext.jsx, add this function:
+  const updateUserProfile = async (userData) => {
+    try {
+      // Update Firebase Auth profile (display name, photo URL)
+      await updateProfile(auth.currentUser, {
+        displayName: userData.displayName,
+        ...(userData.photoURL && { photoURL: userData.photoURL })
+      });
+      
+      // If email is changing, update it separately
+      if (userData.email && userData.email !== auth.currentUser.email) {
+        await updateEmail(auth.currentUser, userData.email);
+      }
+      
+      // Update Firestore document if needed
+      if (userData.preferences) {
+        const userDocRef = doc(db, "users", auth.currentUser.uid);
+        await updateDoc(userDocRef, {
+          displayName: userData.displayName,
+          email: userData.email || auth.currentUser.email,
+          preferences: userData.preferences
+        });
+      }
+      
+      // Make sure to update the local user state
+      setUser({
+        ...auth.currentUser,
+        ...userData
+      });
+      
+      return true;
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      throw error;
+    }
+  };
+
+  // Add it to the context value object:
   const value = {
     user,
     loading,
     signup,
     login,
     logout,
-    resetPassword
+    resetPassword,
+    updateProfile: updateUserProfile // Export as updateProfile
   };
 
   return (
