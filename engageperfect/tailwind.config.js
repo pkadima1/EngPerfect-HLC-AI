@@ -1,21 +1,20 @@
 /**
  * File: tailwind.config.js
- * Version: 1.0.0
+ * Version: 1.1.0
  * Purpose: Configure Tailwind CSS for the EngagePerfect application.
- * Includes dark mode configuration and content paths.
+ * Includes dark mode configuration, content paths, and custom color palette.
  */
  
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   darkMode: 'class', // Enable class-based dark mode
   theme: {
     extend: {
       colors: {
-        // Add your custom colors here if needed
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',

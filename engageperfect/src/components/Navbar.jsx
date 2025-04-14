@@ -42,10 +42,10 @@ export default function Navbar() {
             Dashboard
           </Link>
           <Link 
-            to="/new-caption" 
+            to="/caption-generator" 
             className="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400"
           >
-            New Caption
+            Caption Generator
           </Link>
           <Link 
             to="/new-blog" 
@@ -174,11 +174,11 @@ export default function Navbar() {
               Dashboard
             </Link>
             <Link
-              to="/new-caption"
+              to="/caption-generator"
               className="block px-3 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={() => setIsMenuOpen(false)}
             >
-              New Caption
+              Caption Generator
             </Link>
             <Link
               to="/new-blog"

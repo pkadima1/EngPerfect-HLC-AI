@@ -1,8 +1,8 @@
 /**
  * File: App.jsx
- * Version: 1.2.0
+ * Version: 1.3.0
  * Purpose: Main application component with routing and theme provider.
- * Updated to show navbar globally for all users.
+ * Updated to include the CaptionGenerator page and maintain authentication.
  */
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import CaptionGenerator from './pages/CaptionGenerator';
 import { Toaster } from 'react-hot-toast';
 
 function App() {
@@ -42,6 +43,12 @@ function App() {
                 <Route path="/profile" element={
                   <RequireAuth>
                     <Profile />
+                  </RequireAuth>
+                } />
+                
+                <Route path="/caption-generator" element={
+                  <RequireAuth>
+                    <CaptionGenerator />
                   </RequireAuth>
                 } />
                 
