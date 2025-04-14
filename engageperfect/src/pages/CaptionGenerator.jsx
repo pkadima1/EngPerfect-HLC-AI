@@ -1,12 +1,13 @@
 /**
  * File: CaptionGenerator.jsx
- * Version: 1.0.0
+ * Version: 1.4.0
  * Purpose: Main page component for the caption generator.
  * 
  * This component:
  * - Sets up the wizard flow for caption generation
- * - Currently only implements the first two steps (Upload Media, Select Niche)
+ * - Implements the first five steps (Upload Media, Select Niche, Platform, Goal, Tone)
  * - Additional steps will be added one by one
+ * - Manages wizard validation and completion
  * 
  * Uses: WizardContext.jsx, WizardLayout.jsx, Step Components
  */
@@ -17,22 +18,21 @@ import WizardLayout from '../components/wizard/WizardLayout';
 // Import implemented step components
 import UploadMediaStep from '../components/wizard/steps/UploadMediaStep';
 import SelectNicheStep from '../components/wizard/steps/SelectNicheStep';
+import PlatformStep from '../components/wizard/steps/PlatformStep';
+import GoalStep from '../components/wizard/steps/GoalStep';
+import ToneStep from '../components/wizard/steps/ToneStep';
+
 // Placeholder components for future steps - to be implemented later
-// These are commented out until we implement them
-// import PlatformStep from '../components/wizard/steps/PlatformStep';
-// import GoalStep from '../components/wizard/steps/GoalStep';
-// import ToneStep from '../components/wizard/steps/ToneStep';
 // import GeneratedCaptionsStep from '../components/wizard/steps/GeneratedCaptionsStep';
 
 // Define the steps for the caption generation process
-// For now, we'll only include the first two steps that we've implemented
 const WIZARD_STEPS = [
   { id: 'upload_media', label: 'Upload Media', component: UploadMediaStep },
   { id: 'select_niche', label: 'Select Niche', component: SelectNicheStep },
+  { id: 'platform', label: 'Platform', component: PlatformStep },
+  { id: 'goal', label: 'Goal', component: GoalStep },
+  { id: 'tone', label: 'Tone', component: ToneStep },
   // Placeholder steps with temporary components
-  { id: 'platform', label: 'Platform', component: PlaceholderStep },
-  { id: 'goal', label: 'Goal', component: PlaceholderStep },
-  { id: 'tone', label: 'Tone', component: PlaceholderStep },
   { id: 'generated_captions', label: 'Generated Captions', component: PlaceholderStep },
 ];
 
@@ -72,8 +72,20 @@ export default function CaptionGenerator() {
         return !!(formData.mediaUrl || formData.isTextOnly);
       
       case 1: // Select Niche
-        // Must have a niche selected
-        return !!formData.niche;
+        // Must have either a custom niche input or a selected niche
+        return !!(formData.nicheInput || formData.nicheSelected);
+      
+      case 2: // Platform
+        // Must have selected a platform
+        return !!formData.platform;
+      
+      case 3: // Goal
+        // Must have selected a goal
+        return !!formData.goal;
+      
+      case 4: // Tone
+        // Must have selected a tone
+        return !!formData.tone;
       
       // Other steps will be added as they are implemented
       default:
@@ -86,7 +98,9 @@ export default function CaptionGenerator() {
     media: null,
     mediaUrl: '',
     mediaType: '',
-    niche: '',
+    nicheInput: '',
+    nicheSelected: '',
+    niche: '', // For backward compatibility
     platform: '',
     goal: '',
     tone: '',
